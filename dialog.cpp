@@ -21,6 +21,7 @@
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QDialog>
 
 QT_USE_NAMESPACE
 
@@ -83,6 +84,7 @@ Dialog::Dialog(QWidget *parent)
     connect(serialPortComboBox, SIGNAL(currentIndexChanged(QString)),this, SLOT(activateRunButton()));
     connect(waitRequestSpinBox, SIGNAL(valueChanged(int)),this, SLOT(activateRunButton()));
     connect(responseLineEdit, SIGNAL(textChanged(QString)),this, SLOT(activateRunButton()));
+    startSlave();
 }
 
 
@@ -122,7 +124,7 @@ void Dialog::insertDatabase(const QString &json)
     QString sql = "INSERT INTO `radon`.`logs` (`radon`,`hum`,`temp`,`pres`) VALUES (%1,%2,%3,%4);";
     foreach (const QJsonValue & value, jsonArray) {
         QJsonObject obj = value.toObject();
-        sql = QString(sql).arg(obj["radon"].toInt()).arg(obj["hum"].toInt()).arg(obj["temp"].toInt()).arg(obj["pres"].toInt());
+        sql = QString(sql).arg(obj["radon"].toInt()).arg(obj["hum"].toDouble()).arg(obj["temp"].toDouble()).arg(obj["pres"].toInt());
 
     }
          QSqlDatabase db = QSqlDatabase::addDatabase("QMYSQL");
